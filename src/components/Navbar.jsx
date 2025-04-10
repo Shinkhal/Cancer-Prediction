@@ -20,9 +20,9 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-md px-6 py-3 flex justify-between items-center">
-      <Link to="/" className="text-xl font-bold text-red-500">
-        Cancer & Thyroid Dashboard
+    <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
+      <Link to="/" className="text-xl font-bold text-red-500 cursor-pointer">
+        Thyroid Cancer Awareness
       </Link>
 
       <div className="flex items-center gap-4">

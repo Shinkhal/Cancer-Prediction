@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
-
+import { Skeleton } from "./components/ui/skeleton";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -12,6 +12,7 @@ import Testimonial from "./pages/Testimonial";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import PredictionForm from "./pages/Prediction";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -27,8 +28,19 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div className="flex items-center justify-center h-screen text-lg">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="p-6 space-y-4 w-full max-w-md">
+          <Skeleton className="h-8 w-1/3" /> {/* Title */}
+          <Skeleton className="h-6 w-1/2" /> {/* Subtitle */}
+          <Skeleton className="h-4 w-full" /> {/* Content line */}
+          <Skeleton className="h-4 w-3/4" /> {/* Second content line */}
+        </div>
+      </div>
+    );
   }
+  
+  
 
   return (
     <Router>
@@ -42,6 +54,7 @@ function App() {
                 <Route path="*" element={<Navigate to="/" />} />
                 <Route path="/testimonial" element={<Testimonial />} />
                 <Route path="/prediction" element={<PredictionForm />} />
+                <Route path="/dashboard" element={<Dashboard />} />
               </>
             ) : (
               <>
