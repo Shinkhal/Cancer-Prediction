@@ -8,7 +8,6 @@ const Dashboard = () => {
   const [loading1, setLoading1] = useState(true);
   const [loading2, setLoading2] = useState(true);
 
-  // Refs for fullscreen
   const iframeContainerRef1 = useRef(null);
   const iframeContainerRef2 = useRef(null);
 
@@ -44,7 +43,7 @@ const Dashboard = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 space-y-4 md:space-y-0">
               <div>
                 <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                  Dashboard 2: Risk Factors Overview 
+                  Dashboard 1: Risk Factors Overview 
                 </h2>
                
                 <p className="text-gray-600 text-sm">
@@ -89,7 +88,7 @@ const Dashboard = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 space-y-4 md:space-y-0">
               <div>
                 <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                  Dashboard 1: Additional Insights
+                  Dashboard 2: Additional Insights
                 </h2>
                 <p className="text-gray-600 text-sm">
                   Dive deeper into the data to explore additional trends and insights related to thyroid conditions. This dashboard helps you examine more granular details and correlations for better understanding.

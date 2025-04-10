@@ -64,6 +64,12 @@ const Home = () => {
       toast.error("Please enter a valid email address.");
       return;
     }
+    const isValidEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!isValidEmail(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
 
     try {
       await addDoc(collection(db, "newsletter"), { email });
@@ -163,8 +169,8 @@ const Home = () => {
                   <Skeleton className="h-4 w-5/6" />
                 </div>
               ))
-              : news.map((article, idx) => (
-                <div key={idx} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
+              : news.map((article) => (
+                <div key={article.url} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
                   {article.image ? (
   <img src={article.image} alt={article.title} className="h-32 sm:h-40 lg:h-48 w-full object-cover" />
 ) : (

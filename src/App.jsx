@@ -23,7 +23,7 @@ function App() {
       setUser(currentUser);
       setLoading(false);
     });
-
+    
     return () => unsubscribe();
   }, []);
 
@@ -39,7 +39,6 @@ function App() {
       </div>
     );
   }
-  
   
 
   return (
