@@ -20,26 +20,23 @@ const Home = () => {
     const fetchNews = async () => {
       try {
         const response = await fetch(
-          `https://newsapi.org/v2/everything?q=thyroid%20cancer&sortBy=publishedAt&pageSize=20&apiKey=${import.meta.env.VITE_NEWS_API_KEY}`
+          `https://gnews.io/api/v4/search?q=thyroid%20cancer&lang=en&max=4&sortBy=publishedAt&token=${import.meta.env.VITE_GNEWS_API_KEY}`
         );
+        
         const data = await response.json();
-
-        const healthKeywords = ["thyroid", "cancer", "tumor", "oncology", "treatment", "diagnosis", "health", "medicine"];
-        const filteredArticles = data.articles.filter(article => {
-          const text = `${article.title} ${article.description} ${article.content}`.toLowerCase();
-          return healthKeywords.some(keyword => text.includes(keyword));
-        });
-
-        setNews(filteredArticles.slice(0, 4));
+  
+        // GNews already gives filtered news, no need for extra filtering
+        setNews(data.articles);
       } catch (error) {
         console.error("Error fetching news:", error);
       } finally {
         setNewsLoading(false);
       }
     };
-
+  
     fetchNews();
   }, []);
+  
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -168,13 +165,14 @@ const Home = () => {
               ))
               : news.map((article, idx) => (
                 <div key={idx} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
-                  {article.urlToImage ? (
-                    <img src={article.urlToImage} alt={article.title} className="h-32 sm:h-40 lg:h-48 w-full object-cover" />
-                  ) : (
-                    <div className="h-32 sm:h-40 lg:h-48 w-full bg-gray-200 flex items-center justify-center">
-                      <p className="text-gray-500 text-sm">No image available</p>
-                    </div>
-                  )}
+                  {article.image ? (
+  <img src={article.image} alt={article.title} className="h-32 sm:h-40 lg:h-48 w-full object-cover" />
+) : (
+  <div className="h-32 sm:h-40 lg:h-48 w-full bg-gray-200 flex items-center justify-center text-gray-500">
+    No Image
+  </div>
+)}
+
                   <div className="p-3 sm:p-4 flex flex-col flex-grow justify-between">
                     <div>
                       <a href={article.url} target="_blank" rel="noopener noreferrer">
