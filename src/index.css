@@ -139,3 +139,22 @@ body {
 .animate-scroll {
   animation: scroll 20s linear infinite;
 }
+
+/* Add these styles to your CSS */
+.chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.chat-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

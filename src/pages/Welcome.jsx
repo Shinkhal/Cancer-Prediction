@@ -1,6 +1,7 @@
 import React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Welcome = () => {
   return (
@@ -83,7 +84,7 @@ const Welcome = () => {
         </div>
         <div className="pt-2 md:pt-4">
           <Button asChild className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md font-medium">
-            <a href="/login">Log In</a>
+          <Link to="/login">Log In</Link>
           </Button>
         </div>
       </div>
@@ -130,41 +131,105 @@ const Welcome = () => {
 
       {/* FAQ Section */}
       <section className="p-8 bg-white shadow">
-        <h2 className="text-3xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
-        <div className="max-w-4xl mx-auto text-lg">
-          <Accordion type="multiple">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>What is early detection for thyroid cancer?</AccordionTrigger>
-              <AccordionContent>
-                Early detection means identifying cancer before symptoms arise, which significantly increases the chances of successful treatment. Regular screenings and knowing the warning signs are key. 
-                <a href="https://www.cancer.org/healthy/find-cancer-early.html" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> Learn more about early detection</a>.
-              </AccordionContent>
-            </AccordionItem>
+  <h2 className="text-3xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
+  <div className="max-w-4xl mx-auto text-lg">
+    <Accordion type="multiple">
+      <AccordionItem value="item-1">
+        <AccordionTrigger>What is early detection for thyroid cancer?</AccordionTrigger>
+        <AccordionContent>
+          Early detection means identifying cancer before symptoms arise, which significantly increases the chances of successful treatment. Regular screenings and knowing the warning signs are key. 
+          <a href="https://www.cancer.org/healthy/find-cancer-early.html" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> Learn more about early detection</a>.
+        </AccordionContent>
+      </AccordionItem>
 
-            <AccordionItem value="item-2">
-              <AccordionTrigger>What are common thyroid symptoms?</AccordionTrigger>
-              <AccordionContent>
-                Common symptoms include weight changes, fatigue, temperature sensitivity, and swelling in the neck. Always consult a doctor for accurate diagnosis. 
-                <a href="https://www.mayoclinic.org/diseases-conditions/thyroid-disease/symptoms-causes/syc-20351653" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> See more symptoms</a>.
-              </AccordionContent>
-            </AccordionItem>
+      <AccordionItem value="item-2">
+        <AccordionTrigger>What are common thyroid symptoms?</AccordionTrigger>
+        <AccordionContent>
+          Common symptoms include weight changes, fatigue, temperature sensitivity, and swelling in the neck. Always consult a doctor for accurate diagnosis. 
+          <a href="https://www.mayoclinic.org/diseases-conditions/thyroid-disease/symptoms-causes/syc-20351653" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> See more symptoms</a>.
+        </AccordionContent>
+      </AccordionItem>
 
-            <AccordionItem value="item-3">
-              <AccordionTrigger>How can AI tools assist in thyroid health?</AccordionTrigger>
-              <AccordionContent>
-                AI tools can help analyze patterns in medical data, predict risks based on individual health inputs, and support doctors in diagnosis. These tools are not a replacement for medical advice but provide helpful insights.
-              </AccordionContent>
-            </AccordionItem>
+      <AccordionItem value="item-3">
+        <AccordionTrigger>How can AI tools assist in thyroid health?</AccordionTrigger>
+        <AccordionContent>
+          AI tools can help analyze patterns in medical data, predict risks based on individual health inputs, and support doctors in diagnosis. These tools are not a replacement for medical advice but provide helpful insights.
+        </AccordionContent>
+      </AccordionItem>
 
-            <AccordionItem value="item-4">
-              <AccordionTrigger>Where can I find trusted thyroid cancer resources?</AccordionTrigger>
-              <AccordionContent>
-                Our platform connects you to reliable sources like WHO, Mayo Clinic, and other trusted health portals. Stay informed and proactive in managing your health.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-      </section>
+      <AccordionItem value="item-4">
+        <AccordionTrigger>Where can I find trusted thyroid cancer resources?</AccordionTrigger>
+        <AccordionContent>
+          Our platform connects you to reliable sources like WHO, Mayo Clinic, and other trusted health portals. Stay informed and proactive in managing your health.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-5">
+        <AccordionTrigger>What are the different types of thyroid cancer?</AccordionTrigger>
+        <AccordionContent>
+          There are four main types of thyroid cancer: papillary (most common), follicular, medullary, and anaplastic (most aggressive). Each type affects different thyroid cells and has varying treatment approaches and prognosis. 
+          <a href="https://www.cancer.org/cancer/thyroid-cancer/about/what-is-thyroid-cancer.html" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> Learn about thyroid cancer types</a>.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-6">
+        <AccordionTrigger>What are risk factors for developing thyroid cancer?</AccordionTrigger>
+        <AccordionContent>
+          Risk factors include exposure to radiation, family history of thyroid cancer, certain genetic conditions, being female, and iodine deficiency. However, many people with thyroid cancer have no known risk factors, and most people with risk factors don't develop the disease.
+          <a href="https://www.cancer.net/cancer-types/thyroid-cancer/risk-factors" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> More about risk factors</a>.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-7">
+        <AccordionTrigger>How is thyroid cancer diagnosed?</AccordionTrigger>
+        <AccordionContent>
+          Diagnosis typically involves physical examination, blood tests to check thyroid function, ultrasound imaging, fine-needle aspiration biopsy, and sometimes molecular testing of the biopsy sample. Additional imaging tests may be needed to determine if cancer has spread.
+          <a href="https://www.thyroid.org/thyroid-cancer/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> Understand diagnosis procedures</a>.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-8">
+        <AccordionTrigger>What treatments are available for thyroid cancer?</AccordionTrigger>
+        <AccordionContent>
+          Treatments typically include surgery to remove part or all of the thyroid gland, radioactive iodine therapy, thyroid hormone therapy, external beam radiation, targeted drug therapy, and chemotherapy. The specific approach depends on the cancer type, stage, and individual factors.
+          <a href="https://www.nccn.org/patients/guidelines/content/PDF/thyroid-patient.pdf" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> Treatment guidelines</a>.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-9">
+        <AccordionTrigger>What is the thyroid-stimulating hormone (TSH) test?</AccordionTrigger>
+        <AccordionContent>
+          The TSH test measures the level of thyroid-stimulating hormone in your blood. This test helps evaluate thyroid function and can indicate hyper- or hypothyroidism. While not diagnostic for cancer itself, it's often part of the initial assessment of thyroid health.
+          <a href="https://www.thyroid.org/thyroid-function-tests/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> More about thyroid testing</a>.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-10">
+        <AccordionTrigger>How does life change after thyroid cancer treatment?</AccordionTrigger>
+        <AccordionContent>
+          After treatment, many people need lifelong thyroid hormone replacement therapy. Regular follow-up appointments are necessary to monitor for recurrence. While most people return to normal activities, some may experience fatigue, voice changes, or calcium level issues. Support groups can help with emotional adjustment.
+          <a href="https://www.cancer.net/survivorship" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> Cancer survivorship resources</a>.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-11">
+        <AccordionTrigger>What is the relationship between thyroid nodules and cancer?</AccordionTrigger>
+        <AccordionContent>
+          Thyroid nodules are quite common, with over 90% being benign (non-cancerous). However, a small percentage can be malignant. Factors that increase suspicion include rapid growth, family history of thyroid cancer, nodule hardness, lymph node swelling, and certain ultrasound characteristics.
+          <a href="https://www.endocrine.org/patient-engagement/endocrine-library/thyroid-nodules" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> Understanding thyroid nodules</a>.
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-12">
+        <AccordionTrigger>How does diet affect thyroid health?</AccordionTrigger>
+        <AccordionContent>
+          A balanced diet with adequate iodine is important for thyroid health. However, extremely high iodine intake can be problematic for some people. Foods containing goitrogens (like raw cruciferous vegetables) may affect thyroid function when consumed in very large amounts. Selenium and zinc are also important minerals for thyroid health.
+          <a href="https://www.thyroid.org/iodine-deficiency/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline"> Learn about nutrition and thyroid</a>.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  </div>
+</section>
     </div>
   );
 };

@@ -1,34 +1,48 @@
-// src/pages/Home.jsx
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { db } from "@/firebase";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Brain, BarChart3, BookOpen, Pencil } from "lucide-react";
+import { Brain, BarChart3, BookOpen, Pencil, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { toast } from "sonner";
+import { motion, useAnimationControls } from "framer-motion";
+import ThyroidChatbot from "@/components/Chatbot";
 
 const Home = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [news, setNews] = useState([]);
   const [newsLoading, setNewsLoading] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
+  const controls = useAnimationControls();
+  const scrollContainerRef = useRef(null);
+  const testimonialWidth = 288; // w-72 = 18rem = 288px
 
   useEffect(() => {
+    let isApiFailed = false; // Local flag
+  
     const fetchNews = async () => {
+      if (isApiFailed) return; // Stop if already failed
+  
       try {
         const response = await fetch(
           `https://gnews.io/api/v4/search?q=thyroid%20cancer&lang=en&max=4&sortBy=publishedAt&token=${import.meta.env.VITE_GNEWS_API_KEY}`
         );
-        
-        const data = await response.json();
   
-        // GNews already gives filtered news, no need for extra filtering
+        if (!response.ok) {
+          // If response status is not 200-299
+          console.error("News API error:", response.status, response.statusText);
+          isApiFailed = true;
+          return;
+        }
+  
+        const data = await response.json();
         setNews(data.articles);
       } catch (error) {
         console.error("Error fetching news:", error);
+        isApiFailed = true;
       } finally {
         setNewsLoading(false);
       }
@@ -37,7 +51,7 @@ const Home = () => {
     fetchNews();
   }, []);
   
-
+  
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
@@ -56,33 +70,74 @@ const Home = () => {
     fetchTestimonials();
   }, []);
 
-  const handleNewsletterSubmit = async (e) => {
-    e.preventDefault();
-    const email = e.target.email.value.trim();
-
-    if (!email) {
-      toast.error("Please enter a valid email address.");
-      return;
+  // Start the animation when testimonials are loaded
+  useEffect(() => {
+    if (testimonials.length > 0 && !loading && !isPaused) {
+      startScrollAnimation();
     }
-    const isValidEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!isValidEmail(email)) {
-      toast.error("Please enter a valid email address.");
-      return;
-    }
+  }, [testimonials, loading, isPaused,]);
 
+  const startScrollAnimation = () => {
+    const totalWidth = testimonials.length * testimonialWidth;
+    
+    controls.start({
+      x: -totalWidth,
+      transition: {
+        duration: testimonials.length * 5, // Adjust speed based on number of testimonials
+        ease: "linear",
+        repeat: Infinity,
+        repeatType: "loop"
+      }
+    });
+  };
 
-    try {
-      await addDoc(collection(db, "newsletter"), { email });
-      toast.success("Thank you for subscribing!");
-      e.target.reset();
-    } catch (error) {
-      console.error("Error subscribing:", error);
-      toast.error("Something went wrong. Please try again later.");
+  const pauseAnimation = () => {
+    setIsPaused(true);
+    controls.stop();
+  };
+
+  const resumeAnimation = () => {
+    setIsPaused(false);
+    startScrollAnimation();
+  };
+
+  const scrollTestimonials = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 300;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
     }
   };
 
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value.trim();
+  
+    if (!email || !isValidEmail(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+  
+    toast.promise(
+      addDoc(collection(db, "newsletter"), { email }),
+      {
+        loading: "Subscribing...",
+        success: () => {
+          e.target.reset();
+          return "Thank you for subscribing!";
+        },
+        error: "Something went wrong. Please try again later.",
+      }
+    );
+  };
+  
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 text-gray-800">
+      <ThyroidChatbot/>
       {/* Header - Improved responsiveness */}
       <header className="bg-gradient-to-r from-blue-50 via-teal-50 to-emerald-50 text-gray-800 py-8 sm:py-10 lg:py-12 px-4 sm:px-6 lg:px-8 shadow-lg rounded-b-lg">
         <div className="container mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-6">
@@ -156,6 +211,18 @@ const Home = () => {
           </div>
         </section>
 
+
+
+        {/* About Section - Improved text spacing */}
+        <section>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">About This Platform</h2>
+          <div className="text-sm sm:text-base text-gray-700 max-w-3xl mx-auto space-y-3 sm:space-y-4 leading-relaxed px-4 sm:px-6">
+            <p>This platform is dedicated to raising awareness about thyroid cancer, offering tools and trusted information for early detection and prevention.</p>
+            <p>We bring together AI predictions, global research, and real stories to empower individuals to take proactive steps in their health journey.</p>
+            <p>Our goal is to make thyroid cancer knowledge accessible and actionable for everyone, whether you're looking for guidance or supporting a loved one.</p>
+            <p>Early education and informed decisions can save lives. Let's work together towards a healthier future.</p>
+          </div>
+        </section>
         {/* News Section - Improved grid and card structure */}
         <section>
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">Latest Thyroid Cancer News</h2>
@@ -172,12 +239,12 @@ const Home = () => {
               : news.map((article) => (
                 <div key={article.url} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
                   {article.image ? (
-  <img src={article.image} alt={article.title} className="h-32 sm:h-40 lg:h-48 w-full object-cover" />
-) : (
-  <div className="h-32 sm:h-40 lg:h-48 w-full bg-gray-200 flex items-center justify-center text-gray-500">
-    No Image
-  </div>
-)}
+                    <img src={article.image} alt={article.title} className="h-32 sm:h-40 lg:h-48 w-full object-cover" />
+                  ) : (
+                    <div className="h-32 sm:h-40 lg:h-48 w-full bg-gray-200 flex items-center justify-center text-gray-500">
+                      No Image
+                    </div>
+                  )}
 
                   <div className="p-3 sm:p-4 flex flex-col flex-grow justify-between">
                     <div>
@@ -200,46 +267,95 @@ const Home = () => {
           </div>
         </section>
 
-        {/* About Section - Improved text spacing */}
-        <section>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">About This Platform</h2>
-          <div className="text-sm sm:text-base text-gray-700 max-w-3xl mx-auto space-y-3 sm:space-y-4 leading-relaxed px-4 sm:px-6">
-            <p>This platform is dedicated to raising awareness about thyroid cancer, offering tools and trusted information for early detection and prevention.</p>
-            <p>We bring together AI predictions, global research, and real stories to empower individuals to take proactive steps in their health journey.</p>
-            <p>Our goal is to make thyroid cancer knowledge accessible and actionable for everyone, whether you're looking for guidance or supporting a loved one.</p>
-            <p>Early education and informed decisions can save lives. Let's work together towards a healthier future.</p>
-          </div>
-        </section>
-
-        {/* Testimonials - Improved responsive layout */}
-        <section>
+        {/* Testimonials - Infinite scrolling with Framer Motion */}
+        <section className="relative">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-3">
             <h2 className="text-2xl sm:text-3xl font-bold">Community Testimonials</h2>
-            <Button variant="outline" className="gap-2 self-start" asChild>
-              <Link to="/testimonial">
-                <Pencil className="w-4 h-4" /> Share Your Story
-              </Link>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="rounded-full"
+                onClick={isPaused ? resumeAnimation : pauseAnimation}
+              >
+                {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
+              </Button>
+              <Button variant="outline" className="gap-2" asChild>
+                <Link to="/testimonial">
+                  <Pencil className="w-4 h-4" /> Share Your Story
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Manual scroll buttons */}
+          <div className="flex justify-end gap-2 mb-4">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="rounded-full" 
+              onClick={() => scrollTestimonials('left')}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="rounded-full" 
+              onClick={() => scrollTestimonials('right')}
+            >
+              <ChevronRight className="w-5 h-5" />
             </Button>
           </div>
 
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Testimonials infinite scroll container */}
+          <div 
+            ref={scrollContainerRef}
+            className="overflow-hidden relative"
+            style={{ height: '180px' }}
+            onMouseEnter={pauseAnimation}
+            onMouseLeave={resumeAnimation}
+          >
             {loading ? (
-              Array.from({ length: 4 }).map((_, idx) => (
-                <div key={idx} className="bg-white rounded-xl shadow-md p-4 sm:p-6 space-y-3">
-                  <Skeleton className="h-4 w-1/3" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                </div>
-              ))
+              <div className="flex space-x-4">
+                {Array.from({ length: 4 }).map((_, idx) => (
+                  <div key={idx} className="bg-white rounded-xl shadow-md p-4 sm:p-6 space-y-3 flex-shrink-0 w-64 sm:w-72">
+                    <Skeleton className="h-4 w-1/3" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                  </div>
+                ))}
+              </div>
             ) : testimonials.length > 0 ? (
-              testimonials.slice(0, 4).map(({ id, name, message }) => (
-                <div key={id} className="bg-white rounded-xl shadow-md p-4 sm:p-6 space-y-2 sm:space-y-3 text-gray-700 h-full">
-                  <p className="font-semibold text-purple-700">{name}</p>
-                  <p className="text-xs sm:text-sm text-gray-600">{message}</p>
-                </div>
-              ))
+              <motion.div 
+                className="flex space-x-4 absolute"
+                animate={controls}
+                initial={{ x: 0 }}
+              >
+                {/* First set of testimonials */}
+                {testimonials.map(({ id, name, message }) => (
+                  <div 
+                    key={id} 
+                    className="bg-white rounded-xl shadow-md p-4 sm:p-6 space-y-2 sm:space-y-3 text-gray-700 flex-shrink-0 w-64 sm:w-72"
+                  >
+                    <p className="font-semibold text-purple-700">{name}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 line-clamp-4">{message}</p>
+                  </div>
+                ))}
+                
+                {/* Duplicate testimonials for seamless looping effect */}
+                {testimonials.map(({ id, name, message }) => (
+                  <div 
+                    key={`duplicate-${id}`} 
+                    className="bg-white rounded-xl shadow-md p-4 sm:p-6 space-y-2 sm:space-y-3 text-gray-700 flex-shrink-0 w-64 sm:w-72"
+                  >
+                    <p className="font-semibold text-purple-700">{name}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 line-clamp-4">{message}</p>
+                  </div>
+                ))}
+              </motion.div>
             ) : (
-              <p className="text-gray-600 col-span-full text-center">No testimonials yet. Be the first to share your story!</p>
+              <p className="text-gray-600 w-full text-center">No testimonials yet. Be the first to share your story!</p>
             )}
           </div>
         </section>
